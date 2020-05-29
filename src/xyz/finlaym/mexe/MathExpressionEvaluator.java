@@ -1,13 +1,26 @@
 package xyz.finlaym.mexe;
 
+import java.util.Arrays;
+
 public class MathExpressionEvaluator {
 	public static double evaluate(String expression) {
+		return evaluate(expression, new Variable[0]);
+	}
+	public static double evaluate(String expression, Variable[] variables) {
 		String newExp = "";
 		for(char c : expression.toCharArray()) {
 			if(c != ' ')
 				newExp += c;
 		}
 		expression = newExp;
+		
+		Arrays.sort(variables);
+		
+		for(int i = variables.length - 1; i >= 0; i--) {
+			Variable v = variables[i];
+			expression = expression.replaceAll(v.getName(), String.valueOf(v.getValue()));
+		}
+		
 		while(expression.contains("(-")) {
 			int i = expression.indexOf("(-");
 			int closeI = expression.substring(i).indexOf(")")+i;
@@ -29,36 +42,41 @@ public class MathExpressionEvaluator {
 			offset += end - start - resultS.length();
 		}
 		offset = 0;
+		int count = 0;
 		while(expression.contains("^")) {
 			for(int i = 0; i < expression.length(); i++) {
 				char c = expression.charAt(i);
 				if(c == '^') {
-					expression = solve(c, expression, i);
+					expression = solve(c, expression, i,count);
+					count++;
 					break;
 				}
 			}
 		}
+		count = 0;
 		while(expression.contains("*") || expression.contains("/") || expression.contains("%")) {
 			for(int i = 0; i < expression.length(); i++) {
 				char c = expression.charAt(i);
 				if(c == '*' || c == '/' || c == '%') {
-					expression = solve(c, expression, i);
+					expression = solve(c, expression, i,count);
+					count++;
 					break;
 				}
 			}
 		}
+		count = 0;
 		while(expression.contains("+") || expression.contains("-")) {
 			for(int i = 0; i < expression.length(); i++) {
 				char c = expression.charAt(i);
 				if(c == '+' || c == '-') {
-					expression = solve(c, expression, i);
+					expression = solve(c, expression, i,count);
 					break;
 				}
 			}
 		}
 		return (expression.startsWith("n") ? -1 * Double.valueOf(expression.substring(1)) : Double.valueOf(expression));
 	}
-	private static String solve(char c, String expression, int i) {
+	private static String solve(char c, String expression, int i, int count) {
 		int before = findDoubleBefore(i - 1, expression);
 		int after = findDoubleAfter(i + 1, expression);
 		String beforeS = expression.substring(before, i);
@@ -81,7 +99,7 @@ public class MathExpressionEvaluator {
 		}
 		String newValS = String.valueOf(newVal);
 		newValS = newValS.replaceAll("-", "n");
-		String newExpression = expression.substring(0, before+(c == '^' ? 1 : 0)) + newValS
+		String newExpression = expression.substring(0, before+(count == 0 ? 0 : 1)) + newValS
 				+ expression.substring(after);
 		return newExpression;
 	}
