@@ -18,7 +18,15 @@ public class MathExpressionEvaluator {
 		
 		for(int i = variables.length - 1; i >= 0; i--) {
 			Variable v = variables[i];
-			expression = expression.replaceAll(v.getName(), String.valueOf(v.getValue()));
+			String value = String.valueOf(v.getValue());
+			if(value.startsWith("-")) {
+				value = "("+value+")";
+			}
+			expression = expression.replaceAll(v.getName(), value);
+		}
+		
+		if(expression.startsWith("-")) {
+			expression = "n"+expression.substring(1);
 		}
 		
 		while(expression.contains("(-")) {
@@ -79,7 +87,7 @@ public class MathExpressionEvaluator {
 	private static String solve(char c, String expression, int i, int count) {
 		int before = findDoubleBefore(i - 1, expression);
 		int after = findDoubleAfter(i + 1, expression);
-		String beforeS = expression.substring(before, i);
+		String beforeS = expression.substring(before+(count > 0 ? 1 : 0), i);
 		String afterS = expression.substring(i + 1, after);
 		double beforeD = (beforeS.startsWith("n") ? -1 * Double.valueOf(beforeS.substring(1)) : Double.valueOf(beforeS));
 		double afterD = (afterS.startsWith("n") ? -1 * Double.valueOf(afterS.substring(1)) : Double.valueOf(afterS));
