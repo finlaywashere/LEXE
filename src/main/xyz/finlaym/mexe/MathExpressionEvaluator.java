@@ -37,9 +37,25 @@ public class MathExpressionEvaluator {
 		while (expression.contains("(-")) {
 			int i = expression.indexOf("(-");
 			int closeI = expression.substring(i).indexOf(")") + i;
-			expression = expression.substring(0, i) + "n" + expression.substring(i + 2, closeI)
+			if(i != 0) {
+				char c = expression.charAt(i-1);
+				boolean operator = false;
+				for(char c1 : OPERATORS) {
+					if(c == c1) {
+						operator = true;
+						break;
+					}
+				}
+				if(operator) {
+					expression = expression.substring(0, i) + "n" + expression.substring(i + 2, closeI)
 					+ expression.substring(closeI + 1);
+				}else {
+					expression = expression.substring(0, i) + "&&-" + expression.substring(i + 2, closeI+1)
+					+ expression.substring(closeI + 1);
+				}
+			}
 		}
+		expression = expression.replaceAll("&&-", "(-");
 		// Handle brackets
 		int start = findBracket(expression);
 		while(start != -1) {
