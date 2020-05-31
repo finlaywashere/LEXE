@@ -245,7 +245,7 @@ public class MathExpressionEvaluator {
 		return newExpression;
 	}
 
-	private static final char[] OPERATORS = { '+', '-', '*', '/', '(' };
+	private static final char[] OPERATORS = { '+', '-', '*', '/', '('};
 
 	private static int findDoubleBefore(int i, String expression) {
 		for (int i1 = i; i1 > 0; i1--) {
