@@ -9,7 +9,7 @@ public class LogicalExpressionEvaluatorTest {
 	@Test
 	public void test() {
 		String[] tests = {
-				"2+1 == 3 || (true == false)", "true==false", "((true || false) && true) || 4 == 5+1",
+				"2+1 == 3 || (true == false)", "true==false", "((true || false) && true) || (4 == 5+1)",
 				"false==false","false!=true","true == ((true || false))"
 		};
 		boolean[] expected = {
