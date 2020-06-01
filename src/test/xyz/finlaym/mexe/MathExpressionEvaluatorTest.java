@@ -13,16 +13,19 @@ public class MathExpressionEvaluatorTest {
 		// NOTE: numbers can have spaces in their names only when being used, all spaces are removed by the parser
 		String[] tests = { 
 				"1 +  1", "-5 * (  7   +3)", "3^   2*  9",
-				"(3+4)   ^2 +1", "9+(-1)+   1 +1 +1+3/3", "1   7    % 3+7" 
+				"(3+4)   ^2 +1", "9+(-1)+   1 +1 +1+3/3", "1   7    % 3+7" ,
+				"(((3+2)))*5","((((5*3)+5))/4)+2","((((((((1))))))))"
 		};
 		double[] expectedVals = { 
 				2, -50, 81,
-				50, 12, 9 
+				50, 12, 9,
+				25,7,1
 		};
 		for (int i = 0; i < tests.length; i++) {
 			String equation = tests[i];
 			double expected = expectedVals[i];
 			double result = MathExpressionEvaluator.evaluate(equation);
+			System.out.println("Test: "+(i+1)+" result: "+result);
 			assertEquals(expected, result, 0.3);
 		}
 	}
@@ -48,6 +51,7 @@ public class MathExpressionEvaluatorTest {
 			String equation = tests[i];
 			double expected = expectedVals[i];
 			double result = MathExpressionEvaluator.evaluate(equation,vars);
+			System.out.println("Test: "+(i+7)+" result: "+result);
 			assertEquals(expected, result, 0.3);
 		}
 	}
@@ -68,6 +72,7 @@ public class MathExpressionEvaluatorTest {
 			String equation = tests[i];
 			double expected = expectedVals[i];
 			double result = MathExpressionEvaluator.evaluate(equation);
+			System.out.println("Test: "+(i+13)+" result: "+result);
 			assertEquals(expected, result, 0.3);
 		}
 	}

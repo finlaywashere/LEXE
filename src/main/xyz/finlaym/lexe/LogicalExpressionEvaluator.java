@@ -149,9 +149,13 @@ public class LogicalExpressionEvaluator {
 						String afterS = expression.substring(i + sub.length(), end);
 						boolean result = false;
 						if (sub.equals("||")) {
-							result = Boolean.valueOf(beforeS) || Boolean.valueOf(afterS);
+							boolean beforeB = (isInt(beforeS) ? true : Boolean.valueOf(beforeS));
+							boolean afterB = (isInt(afterS) ? true : Boolean.valueOf(afterS));
+							result = Boolean.valueOf(beforeB) || Boolean.valueOf(afterB);
 						} else if (sub.equals("&&")) {
-							result = Boolean.valueOf(beforeS) && Boolean.valueOf(afterS);
+							boolean beforeB = (isInt(beforeS) ? true : Boolean.valueOf(beforeS));
+							boolean afterB = (isInt(afterS) ? true : Boolean.valueOf(afterS));
+							result = Boolean.valueOf(beforeB) && Boolean.valueOf(afterB);
 						} else if (sub.equals("==")) {
 							result = beforeS.equals(afterS);
 						} else if (sub.equals("!=")) {
@@ -164,6 +168,15 @@ public class LogicalExpressionEvaluator {
 			}
 		}
 		return Boolean.valueOf(expression);
+	}
+	private static boolean isInt(String str) {
+		try {
+			@SuppressWarnings("unused")
+			int i = Integer.valueOf(str);
+			return true;
+		}catch(NumberFormatException e) {
+			return false;
+		}
 	}
 
 	private static boolean isEquation(String expression, Variable[] variables) {
